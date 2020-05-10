@@ -1473,6 +1473,9 @@ class Poly_Original(object):
         self._f = None
         self._is_first_fit = True
 
+#cmto   Coefficients
+        self._coeffs = []
+
     def fit_to_points(self, points):
         """ Calculate the coefficients and create the polynomial function.
         Doesn't seem to mind if the points are not in order by x.
@@ -1499,6 +1502,11 @@ class Poly_Original(object):
         # _vars are unused
         coeffs, _residuals, _rank, _sing_vals = np.linalg.lstsq(A, y_values)
 
+#cmto   Coefficients for curve fitting
+        self._coeffs = []
+        for x in coeffs :
+            self._coeffs.append(x)
+
         _print_polynomial(coeffs)
 
         # Create a polynomial function using the coefficients, to be used to
@@ -1513,7 +1521,45 @@ class Poly_Original(object):
 
     def derivative(self, x):
         """ Dummy """
-        return x
+        #return x
+        if self._order == 1 :
+            return self._coeffs[0]
+        elif self._order == 2 :
+            y = 2*self._coeffs[0]*x + self._coeffs[1]
+            return y
+        elif self._order == 3 :
+            y = 3*self._coeffs[0]*x**2 + 2*self._coeffs[1]*x + self._coeffs[2]
+            return y
+        elif self._order == 4 :
+            y = 4*self._coeffs[0]*x**3 + 3*self._coeffs[1]*x**2 + 2*self._coeffs[2]*x + self._coeffs[3]
+            return y
+        elif self._order == 5 :
+            y = 5*self._coeffs[0]*x**4 + 4*self._coeffs[1]*x**3 + 3*self._coeffs[2]*x**2 + 2*self._coeffs[3]*x + self._coeffs[4]
+            return y
+        elif self._order == 6 :
+            y = 6*self._coeffs[0]*x**5 + 5*self._coeffs[1]*x**4 + 4*self._coeffs[2]*x**3 + 3*self._coeffs[3]*x**2 + 2*self._coeffs[4]*x + self._coeffs[5]
+            return y
+        elif self._order == 7 :
+            y = 7*self._coeffs[0]*x**6 + 6*self._coeffs[1]*x**5 + 5*self._coeffs[2]*x**4 + 4*self._coeffs[3]*x**3 + 3*self._coeffs[4]*x**2 + 2*self._coeffs[5]*x + self._coeffs[6]
+            return y
+        elif self._order == 8 :
+            y = 8*self._coeffs[0]*x**7 + 7*self._coeffs[1]*x**6 + 6*self._coeffs[2]*x**5 + 5*self._coeffs[3]*x**4 + 4*self._coeffs[4]*x**3 + 3*self._coeffs[5]*x**2 + 2*self._coeffs[6]*x + self._coeffs[7]
+            return y
+        elif self._order == 9 :
+            y = 9*self._coeffs[0]*x**8 + 8*self._coeffs[1]*x**7 + 7*self._coeffs[2]*x**6 + 6*self._coeffs[3]*x**5 + 5*self._coeffs[4]*x**4 + 4*self._coeffs[5]*x**3 + 3*self._coeffs[6]*x**2 + 2*self._coeffs[7]*x + self._coeffs[8]
+            return y
+        elif self._order == 10 :
+            y = 10*self._coeffs[0]*x**9 + 9*self._coeffs[1]*x**8 + 8*self._coeffs[2]*x**7 + 7*self._coeffs[3]*x**6 + 6*self._coeffs[4]*x**5 + 5*self._coeffs[5]*x**4 + 4*self._coeffs[6]*x**3 + 3*self._coeffs[7]*x**2 + 2*self._coeffs[8]*x + self._coeffs[9]
+            return y
+        elif self._order == 11 :
+            y = 11*self._coeffs[0]*x**10 + 10*self._coeffs[1]*x**9 + 9*self._coeffs[2]*x**8 + 8*self._coeffs[3]*x**7 + 7*self._coeffs[4]*x**6 + 6*self._coeffs[5]*x**5 + 5*self._coeffs[6]*x**4 + 4*self._coeffs[7]*x**3 + 3*self._coeffs[8]*x**2 + 2*self._coeffs[9]*x + self._coeffs[10]
+            return y
+        elif self._order == 12 :
+            y = 12*self._coeffs[0]*x**11 + 11*self._coeffs[1]*x**10 + 10*self._coeffs[2]*x**9 + 9*self._coeffs[3]*x**8 + 8*self._coeffs[4]*x**7 + 7*self._coeffs[5]*x**6 + 6*self._coeffs[6]*x**5 + 5*self._coeffs[7]*x**4 + 4*self._coeffs[8]*x**3 + 3*self._coeffs[9]*x**2 + 2*self._coeffs[10]*x + self._coeffs[11]
+            return y
+        else :
+            # very complicated
+            raise RuntimeError("Polynomial Curve Fit Order > 12 Not implemented")
 
     def integral(self, x):
         """ Dummy """

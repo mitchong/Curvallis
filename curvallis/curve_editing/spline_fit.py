@@ -159,25 +159,36 @@ class Spline_Fit(object):
         x0, y0 = zip(*all_data)
         x_data = list(x0)
         y_data = list(y0)        
+
+	#Add in min and max x-values into spline boundaries if not specified by user
+        spline_bound = sorted(self._args.spline_bound[0])
+        #print ("Xmin %s, Xmax %s" % (min(x_data), max(x_data)))
+        for x in spline_bound:
+            if min(x_data) not in spline_bound:
+                spline_bound.append(min(x_data))
+            if max(x_data) not in spline_bound:
+                spline_bound.append(max(x_data))
+
+        spline_bound = sorted(spline_bound)
         
         #Check if regions are reasonable
         if len(self._args.spline_bound) != 0:
-            if max(self._args.spline_bound[0]) > self._x_max:
-                raise RuntimeError("Max region bound > max x_value")
-            if min(self._args.spline_bound[0]) < self._x_min:
-                raise RuntimeError("Min region bound < min x_value")
+            if max(self._args.spline_bound[0]) > max(x_data):
+                raise RuntimeError("Max region bound > max x_value: %s vs %s" % (max(self._args.spline_bound[0]), max(x_data)))
+            if min(self._args.spline_bound[0]) < min(x_data):
+                raise RuntimeError("Min region bound < min x_value: %s vs %s" % (min(self._args.spline_bound[0]), min(x_data)))
 
         #Check double valued X in sorted data. Exit with Error if so.
         if self.check_double_value(all_data):
-            raise RuntimeError("Double valued X to input file: Not Allowed")
+            raise RuntimeError("Double valued X in input file: Not Allowed")
 
         #Check if spline boundaries are specified in config file; if not, use all x data points as regions
-        if len(self._args.spline_bound) < 1:
+        if len(spline_bound) < 1:
             xp = np.asarray(x_data)
             spline = interpolate.CubicSpline(x_data,y_data)
         else:
             model = interpolate.CubicSpline(x_data,y_data)
-            xp = np.asarray(self._args.spline_bound[0])
+            xp = np.asarray(spline_bound)
             yp = model(xp)
             spline = interpolate.CubicSpline(xp,yp)
 
