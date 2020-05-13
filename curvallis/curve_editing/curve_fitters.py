@@ -1475,6 +1475,7 @@ class Poly_Original(object):
 
 #cmto   Coefficients
         self._coeffs = []
+        self._args = args
 
     def fit_to_points(self, points):
         """ Calculate the coefficients and create the polynomial function.
@@ -1502,12 +1503,13 @@ class Poly_Original(object):
         # _vars are unused
         coeffs, _residuals, _rank, _sing_vals = np.linalg.lstsq(A, y_values)
 
-#cmto   Coefficients for curve fitting
+#cmto   Coefficients for curve fitting. Print polynomial if not spline fit.
         self._coeffs = []
         for x in coeffs :
             self._coeffs.append(x)
 
-        _print_polynomial(coeffs)
+        if not self._args.do_spline:
+            _print_polynomial(coeffs)
 
         # Create a polynomial function using the coefficients, to be used to
         # calculate a new curve:

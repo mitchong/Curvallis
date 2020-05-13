@@ -161,18 +161,17 @@ class Spline_Fit(object):
         y_data = list(y0)        
 
 	#Add in min and max x-values into spline boundaries if not specified by user
-        spline_bound = sorted(self._args.spline_bound[0])
-        #print ("Xmin %s, Xmax %s" % (min(x_data), max(x_data)))
-        for x in spline_bound:
-            if min(x_data) not in spline_bound:
-                spline_bound.append(min(x_data))
-            if max(x_data) not in spline_bound:
-                spline_bound.append(max(x_data))
-
-        spline_bound = sorted(spline_bound)
-        
-        #Check if regions are reasonable
         if len(self._args.spline_bound) != 0:
+            spline_bound = sorted(self._args.spline_bound[0])
+            #print ("Xmin %s, Xmax %s" % (min(x_data), max(x_data)))
+            for x in spline_bound:
+                if min(x_data) not in spline_bound:
+                    spline_bound.append(min(x_data))
+                if max(x_data) not in spline_bound:
+                    spline_bound.append(max(x_data))
+            spline_bound = sorted(spline_bound)
+        
+            #Check if regions are reasonable
             if max(self._args.spline_bound[0]) > max(x_data):
                 raise RuntimeError("Max region bound > max x_value: %s vs %s" % (max(self._args.spline_bound[0]), max(x_data)))
             if min(self._args.spline_bound[0]) < min(x_data):
@@ -183,7 +182,7 @@ class Spline_Fit(object):
             raise RuntimeError("Double valued X in input file: Not Allowed")
 
         #Check if spline boundaries are specified in config file; if not, use all x data points as regions
-        if len(spline_bound) < 1:
+        if len(self._args.spline_bound) == 0:
             xp = np.asarray(x_data)
             spline = interpolate.CubicSpline(x_data,y_data)
         else:
